@@ -1,36 +1,49 @@
-# Submission Guide — MTL-AI-049
+# MTL-AI-049 — Submission guide
 
-## Final release sequence
+## Release sequence
 
-1. Complete D1–D12 and reconcile requirements → deliverables → acceptance criteria → tests → evidence.
-2. Freeze ATT&CK resource, scenario pack, gold labels, model/runtime, prompts and dependencies.
-3. Run deterministic correlation/ATT&CK baseline and local-AI held-out evaluation; retain raw outputs and failures.
-4. Execute guardrail tests, ≥10 domain tests and 3 UAT tasks; retain defects/retests.
-5. Demonstrate evidence-linked timeline, ambiguous correlation, rejected unsupported mapping, analyst edit/approval and final handover.
-6. Have a different member perform the clean local rerun.
-7. Produce the security decision brief and demo.
-8. Complete FINAL_SUBMISSION.md, CONTRIBUTIONS.md and evidence index.
-9. Tag the evaluated commit `v1.0-mettelo-submission` and verify reviewer access.
+1. Complete D1–D12 and map all agreed user requirements to deliverables, acceptance criteria, tests and final evidence.
+2. Confirm the approved source/data manifest, rights/attribution, exact cohort/version and reviewer restore access.
+3. Freeze deterministic rules, prompts, model/runtime version, evaluation split, schemas and dependency lock before final held-out evaluation.
+4. Run the deterministic baseline and local-AI workflow. Preserve raw outputs, invalid outputs, retries/fallbacks, rejected claims and measured results; do not replace weak runs with hand-written examples.
+5. Execute the project-specific domain/guardrail tests and **three UAT tasks** with expected/actual results, tester/reviewer, defects and retests. Resolve all critical/high defects.
+6. Have a distinct member perform a clean rerun from the documented source and environment. Record hashes, versions, entry point, elapsed time, discrepancies and reconciliation.
+7. Produce a **2-page decision brief**, **8–12 slides** and a **5–10 minute reproducible demo** for SOC Shift Lead. Include five evidence-backed findings, three next actions and at least one defer/unknown case.
+8. Complete `submission/FINAL_SUBMISSION.md`, `CONTRIBUTIONS.md` and the immutable evidence index.
+9. Tag the evaluated commit **`v1.0-mettelo-submission`** and verify reviewer access. Do not silently move the assessed tag.
+
+## Required walkthrough
+
+Answer the commissioned decision:
+
+> Reconstruct a security incident from frozen telemetry, distinguish evidence from hypothesis and produce an analyst-reviewed investigation handover.
+
+Demonstrate one suspicious sequence, one benign/authorised lookalike, one incomplete-telemetry case, one rejected unsupported ATT&CK/compromise claim and one reviewed shift handover.
+
+Show one failure/edge case and explain what the evidence **does not** support.
+
+Preserve this project boundary:
+
+> ATT&CK mappings are evidence-supported hypotheses, not proof of compromise. Do not rank CVEs, classify phishing URLs, execute response actions or claim exfiltration without supporting evidence.
 
 ## Required evidence bundle
 
-- final repository/SHA/tag;
-- requirements and traceability;
-- ATT&CK/source manifests;
-- scenario/split manifests;
-- parser/correlation test logs;
-- gold mappings and predictions;
-- baseline vs AI metrics;
-- raw model outputs and rejected cases;
-- UAT/defect/retest records;
-- reviewed handover exports;
-- independent rerun record;
-- zero-cost declaration;
-- technical handover;
+- team repository URL, final commit SHA and release tag;
+- reviewed master commit;
+- requirements/traceability index;
+- source/data manifest and restore instructions;
+- deterministic baseline outputs;
+- local model/runtime/prompt/config versions;
+- held-out evaluation results with denominators;
+- failed/rejected/guarded examples;
+- UAT records and defect/retest log;
+- independent clean-rerun record;
+- technical/operational handover;
+- final decision brief and demo;
 - individual contribution evidence.
 
-## Completion rule
+## Reviewer decision
 
-Screenshots or a fluent incident story are insufficient. Reviewers must be able to reproduce the core workflow and trace every accepted finding to event evidence, frozen ATT&CK references and human review.
+The reviewer records **ACCEPTED / REWORK / BLOCKED**, actual reviewer, simulated sponsor role, date, unresolved issues and owners/due dates.
 
-Unmet gates remain REWORK/BLOCKED.
+A filled template, screenshot, video or fluent AI output without executed evidence is not acceptance.
