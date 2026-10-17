@@ -1,0 +1,10 @@
+[
+  {
+    "filename": "attack.json",
+    "url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-17.1.json",
+    "resource": "MITRE Enterprise ATT&CK 17.1; retain MITRE terms and attribution",
+    "sha256": "0d1c347a4d584cf7e11ef46556c33b7689341443bf86299188d46c307274323b",
+    "bytes": 44879463,
+    "acquired_date": "2026-10-17"
+  }
+]

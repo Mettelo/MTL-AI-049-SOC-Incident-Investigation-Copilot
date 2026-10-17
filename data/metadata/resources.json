@@ -1,0 +1,7 @@
+[
+  {
+    "filename": "attack.json",
+    "url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-17.1.json",
+    "resource": "MITRE Enterprise ATT&CK 17.1; retain MITRE terms and attribution"
+  }
+]
