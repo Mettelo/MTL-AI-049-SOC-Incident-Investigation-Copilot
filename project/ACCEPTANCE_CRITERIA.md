@@ -1,18 +1,21 @@
-# Acceptance criteria
+# Acceptance Criteria — MTL-AI-049
 
-## Functional gates
-1. Fresh checkout runs the bundled example with Python 3.11+ and no paid dependency.
-2. Official-source preparation succeeds and records provenance; source identifiers survive into output citations.
-3. Every candidate has at least one resolvable exact quotation. Missing data stays explicit.
-4. Each record receives accept/reject and a reviewer note. Pending or partial review blocks export.
-5. Editing any part of the draft after approval invalidates export.
-6. Repeated baseline runs on identical input yield the same content hash.
+| ID | Acceptance gate | Objective pass evidence |
+|---|---|---|
+| AC1 | Scope and requirements | ≥8 prioritised requirements mapped to D/AC/test evidence; approved SOC investigation workflow |
+| AC2 | Resource reproducibility | ATT&CK version/hash and scenario manifest frozen; no hidden live dependency |
+| AC3 | Event parsing integrity | all selected scenarios parsed or quarantined explicitly; stable evidence IDs and timezone handling |
+| AC4 | Timeline correctness | 100% ordering for parseable timezone-aware records on held-out scenarios |
+| AC5 | Correlation quality | correlation precision ≥0.95; recall reported; ambiguous shared-entity cases remain explicit |
+| AC6 | ATT&CK quality | precision ≥0.90 and recall ≥0.80 on adjudicated gold-supported techniques |
+| AC7 | Local AI execution | actual local model run with pinned model/runtime/settings; raw outputs preserved; no paid dependency |
+| AC8 | Grounding safety | citation validity 100%; unsupported accepted compromise/exfiltration claims = 0 |
+| AC9 | Review control | every exported finding/recommendation has human decision/note; edits invalidate prior approval |
+| AC10 | Evaluation integrity | ≥10 scenarios with development/validation/test separation; gold labels and disagreements preserved |
+| AC11 | UAT & defects | ≥10 domain tests + 3 user tasks; zero unresolved critical/high defects; repairs retested |
+| AC12 | Reproducibility | different member completes clean rerun; deterministic outputs/hashes reconcile |
+| AC13 | Handover usefulness | analyst usefulness median ≥4/5 with sample size and disagreements reported |
+| AC14 | Zero-cost completion | no paid SIEM, threat feed, cloud inference, subscription or trial required |
+| AC15 | Submission integrity | evaluated tag/SHA fixed; reviewer access, evidence index, limitations and contributions complete |
 
-## Semantic and AI quality gates
-Timeline ordering 100% for parseable timezone-aware records; correlation precision ≥0.95; ATT&CK precision ≥0.90 and recall ≥0.80 on gold-supported techniques; citation validity 100%; unsupported accepted compromise/exfiltration claims 0; analyst handover median ≥4/5; all recommendations reviewed. Targets require held-out evidence.
-
-## Measurement protocol
-Use six frozen, version-controlled synthetic scenarios: suspicious script chain, authorised administration, incomplete telemetry, duplicate timestamps/out-of-order records, unrelated users on a shared host, and conflicting alerts. Keep two scenarios for development, two for validation and two locked for test; add at least four unseen variants before final submission. Analyst gold must label event ordering, supported entity links, acceptable ATT&CK candidates, unsupported conclusions, evidence IDs and essential next steps. Score ordering pair accuracy, correlation precision/recall, ATT&CK micro precision/recall/F1, citation validity and unsupported factual claim rate. Human reviewers score handover usefulness 1–5; report median and disagreements.
-
-## Evidence for sign-off
-Attach test output, source/split hashes, raw predictions, metric report with denominators, independently reviewed failures, model/no-model comparison, UAT results and known limitations. A 100% citation match is only structural grounding, never proof that the claim follows from that quote. Evaluate factual entailment separately by domain review.
+Final release state: **ACCEPTED, REWORK or BLOCKED**.

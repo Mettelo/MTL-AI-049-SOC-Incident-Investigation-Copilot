@@ -1,65 +1,106 @@
 # MTL-AI-049 — SOC Incident Investigation Copilot
 
-## Business problem and user
-SOC analysts spend time joining alerts and event records into a defensible incident narrative. Alert severity alone does not explain chronology, related entities, uncertainty or the next investigation step.
+**Mettelo Project Studio**  
+**Track:** AI Engineering / Security Operations  
+**Engagement:** Simulated SOC investigation product  
+**Team:** 3–5 people  
+**Delivery window:** 8 weeks  
+**Core completion cost:** £0 incremental software/service spend using existing equipment
 
-**Primary users:** SOC analyst, incident investigator and shift handover lead.
+## Business problem
 
-## Working product
-Reconstruct incidents from events and alerts. Preserve observed evidence separately from correlations and hypotheses. Map supported behaviour to frozen MITRE ATT&CK techniques. Produce timeline, correlation evidence, unknowns, recommendations and analyst handover.
+Security operations teams often receive fragmented alerts and event records that must be manually correlated into a defensible incident narrative. Alert severity alone does not establish chronology, common entities, likely ATT&CK behaviours, evidence gaps or the next investigation step.
 
-**Workflow:** Frozen event scenarios → schema/time validation → UTC-aware chronology → shared-entity correlation → versioned ATT&CK hypothesis → investigation recommendations → analyst handover → reviewed CSV.
+The organisation needs a local copilot that helps an analyst reconstruct an incident from frozen telemetry while preserving a strict boundary between **observed evidence, supported correlation and analyst hypothesis**.
 
-This repository includes a runnable Python command-line application, source importers, a small frozen demonstration input, automated control tests, optional local AI explanations and a hash-bound review/export workflow. The baseline is deterministic; it is not represented as an evaluated language model. Meeting extraction and ATT&CK mappings are candidates. AI quality acceptance still requires the held-out evaluation specified below.
+## Commissioned decision
 
-## Run locally at zero cost
-Install Python 3.11 or newer. No paid APIs, accounts, cloud hosting or Python packages are required. Run commands from this repository root, with normal Python (never `python -O`). Windows users may use `py -3` in place of `python`.
+> Can a local AI-assisted investigation workflow improve incident reconstruction and handover quality without inventing compromise, overstating ATT&CK mappings or taking autonomous response action?
+
+## What the team will build
+
+Build a working local product that:
+
+1. ingests frozen security-event scenarios and validates timestamp/schema quality;
+2. normalises events into a common evidence model;
+3. reconstructs event chronology;
+4. correlates related hosts, users, processes and alerts using explicit rules;
+5. maps only evidence-supported behaviour to a frozen MITRE ATT&CK version;
+6. marks unsupported mappings and unknowns explicitly;
+7. runs a local open-weight model for bounded investigation summaries and next-step suggestions;
+8. validates every citation, ATT&CK reference and critical claim before display;
+9. lets an analyst accept, reject or edit proposed findings;
+10. exports a reviewed incident timeline and shift-handover pack;
+11. preserves model outputs, reviewer decisions and uncertainty;
+12. evaluates the deterministic baseline and AI-assisted workflow on locked scenarios.
+
+This project does not execute malware, monitor live systems, collect credentials, patch assets or automate containment.
+
+## Practical use case
+
+A SOC analyst opens a case containing authentication, process and network events. The product orders the events, identifies shared entities, proposes evidence-supported ATT&CK techniques, lists unresolved questions and drafts a shift-handover note. The analyst follows every evidence link, rejects unsupported conclusions, edits the narrative and approves the final handover.
+
+## Approved resources
+
+Core knowledge:
+**MITRE Enterprise ATT&CK 17.1 STIX 2.1**  
+https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-17.1.json
+
+Core event data:
+a frozen repository-authored safe scenario pack for deterministic assessment. Teams may additionally validate on selected pre-recorded public security-event scenarios, but no live attack execution is required.
+
+## Required workflow
 
 ```text
-python -m unittest discover -s tests -v
-python app.py run --input data/reference/demo.json --output runs/draft.json
-python app.py review-template --draft runs/draft.json --output runs/decisions.json
+Frozen event bundle
+      ↓
+Schema / time validation
+      ↓
+Normalised evidence model
+      ↓
+Timeline reconstruction
+      ↓
+Entity correlation
+      ↓
+ATT&CK candidate mapping
+      ↓
+Local AI investigation draft
+      ↓
+Claim / citation validation
+      ↓
+Analyst review
+      ↓
+Incident handover
 ```
 
-Open `runs/draft.json` alongside its source. For every record in `runs/decisions.json`, change `pending` to `accept` or `reject`, and write a substantive `note`. Review all AI proposals attached to that record as well. To correct factual content, edit the draft, then review that final draft. Approval is a local attestation, not an identity-authenticated signature.
+## Minimum evaluation standard
 
-```text
-python app.py approve --draft runs/draft.json --decisions runs/decisions.json --reviewer "Reviewer Name" --output runs/approval.json
-python app.py export --draft runs/draft.json --approval runs/approval.json --output runs/reviewed.csv
-```
+The final evaluation must cover at least 10 frozen scenarios, including suspicious activity, authorised administration, incomplete telemetry, duplicate/out-of-order timestamps, shared-host ambiguity and conflicting alerts.
 
-Export blocks incomplete review, unknown citations, quote mismatches and edits after approval. CSV includes evidence, details, AI proposals and review notes. JSON remains the detailed evidence-linked minutes, handover or change register. Keep draft/approval together for audit.
+Release targets:
 
-## Use the complete official resources
-Source: **Repository-authored synthetic frozen event scenarios plus MITRE Enterprise ATT&CK 17.1 STIX 2.1**. See [data guidance](data/README.md) and [source register](data/SOURCE_REGISTER.md).
+- timeline ordering = 100% for parseable timezone-aware records;
+- correlation precision ≥ 0.95;
+- ATT&CK precision ≥ 0.90;
+- ATT&CK recall ≥ 0.80;
+- citation validity = 100%;
+- unsupported accepted compromise/exfiltration claims = 0;
+- analyst handover usefulness median ≥ 4/5;
+- every exported recommendation reviewed by a human.
 
-```text
-python scripts/fetch_sources.py
-python app.py prepare --source data/raw/attack.json --output runs/attack.json
-python app.py run --input data/reference/demo.json --output runs/full-draft.json
-```
+## Distinction from existing projects
 
-Raw downloads are local and ignored by Git. The bundled input is a frozen reproducible demonstration; it is not a held-out benchmark.
+This is **not** MTL-XF-039 vulnerability prioritisation and does not rank CVEs or patches. It is **not** MTL-XF-040 phishing detection and does not classify URLs/emails. Its core problem is incident reconstruction and analyst handover from event evidence.
 
-## Optional local AI
-Install the open-source Ollama runtime and download a locally runnable model, for example the Apache-2.0 `qwen2.5:3b`. A 3B quantised model generally needs several GB of RAM/disk; CPU execution is slower. Record the exact model digest from your runtime, hardware and generation settings. Model/runtime downloads need internet once; inference stays at `127.0.0.1:11434` and requires no API key.
+## Zero-cost implementation
 
-```text
-ollama pull qwen2.5:3b
-python app.py run --input data/reference/demo.json --output runs/ai-draft.json --model qwen2.5:3b
-```
+Use Python, local files/SQLite, Streamlit or CLI, pytest/unittest, MITRE ATT&CK STIX data and a local open-weight model via Ollama or llama.cpp. No paid API, cloud inference, SIEM subscription, paid threat-intelligence service or hosted database is required.
 
-AI adds cited explanation proposals to existing records; it cannot approve, overwrite source evidence or execute operational actions. Missing/invalid citations reject the AI result. Quote validity does **not** prove semantic entailment: a reviewer must inspect every proposal. Large meetings/registers may exceed model context; select a documented bounded subset, record excluded items, or use the deterministic full run. No silent truncation is performed. If Ollama is absent or returns invalid JSON, use the baseline and report AI unavailable; do not claim AI evaluation passed.
+## Delivery standard
 
-## Evaluation and completion
-Use six frozen, version-controlled synthetic scenarios: suspicious script chain, authorised administration, incomplete telemetry, duplicate timestamps/out-of-order records, unrelated users on a shared host, and conflicting alerts. Keep two scenarios for development, two for validation and two locked for test; add at least four unseen variants before final submission. Analyst gold must label event ordering, supported entity links, acceptable ATT&CK candidates, unsupported conclusions, evidence IDs and essential next steps. Score ordering pair accuracy, correlation precision/recall, ATT&CK micro precision/recall/F1, citation validity and unsupported factual claim rate. Human reviewers score handover usefulness 1–5; report median and disagreements.
+Final acceptance requires reproducible event ingestion, evidence lineage, baseline logic, local AI inference, guarded ATT&CK mapping, human review, measured evaluation, UAT, independent rerun, technical handover and individual contribution evidence.
 
-**Delivery gates:** Timeline ordering 100% for parseable timezone-aware records; correlation precision ≥0.95; ATT&CK precision ≥0.90 and recall ≥0.80 on gold-supported techniques; citation validity 100%; unsupported accepted compromise/exfiltration claims 0; analyst handover median ≥4/5; all recommendations reviewed. Targets require held-out evidence.
+See [Deliverables](project/DELIVERABLES.md), [Acceptance Criteria](project/ACCEPTANCE_CRITERIA.md), [Data Guidance](data/README.md) and [Submission Guide](submission/SUBMISSION_GUIDE.md).
 
-See [project pack](project/README.md), [evaluation protocol](evaluation/README.md), [UAT](project/UAT_AND_DEMO.md) and [submission guide](submission/SUBMISSION_GUIDE.md). Automated integrity checks and a frozen demonstration are supplied; human acceptance, semantic gold and local-model evaluation are not fabricated.
-
-## Scope boundary
-Distinct from MTL-XF-039 vulnerability prioritisation: no CVE ranking, scanner scoring or patch prioritisation. Distinct from MTL-XF-040 phishing detection: no URL/email classifier. No live monitoring, threat execution, automated containment, credential collection or response commands.
-
-## Repository map
-`app.py` review/export/AI orchestration; `engine.py` domain logic and ingestion; `scripts/` source acquisition and evaluation; `tests/` executable checks; `data/reference/` frozen small inputs; `data/metadata/` provenance and schemas; `project/` delivery contract; `evaluation/` metrics/results; `submission/` final evidence standards.
+---
+**Mettelo — Built for What’s Next**

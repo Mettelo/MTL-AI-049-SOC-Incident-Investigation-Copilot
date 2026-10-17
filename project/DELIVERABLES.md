@@ -1,16 +1,20 @@
-# Required deliverables
+# Deliverables — MTL-AI-049
 
-| Deliverable | Evidence required | Accountable role |
-|---|---|---|
-| Local application | CLI run, validated JSON draft, reviewed CSV | Software engineer |
-| Ingestion and frozen resources | Source URLs, release/date, SHA-256, row counts, parser logs | Data engineer |
-| Domain candidate generation | Evidence-linked records and documented failure modes | Domain analyst |
-| Local AI comparison | Exact model digest/settings, prompts, baseline comparison, invalid-output log | AI engineer |
-| Evaluation | Adjudicated gold, locked split manifest, per-case predictions, metrics and errors | QA/evaluation lead |
-| Governance | Risk log, privacy/licence notes, review audit and rejection cases | Governance reviewer |
-| User acceptance | Executed UAT, user comments, defect resolution and sign-off | Product/domain owner |
-| Final submission | Team repository, tagged commit, report, demo and limitations | Delivery lead |
+| ID | Required output | Minimum evidence | Default location |
+|---|---|---|---|
+| D1 | Discovery & SOC workflow | as-is/to-be investigation flow; users; 8+ requirements; scope; traceability | docs/01-discovery/ |
+| D2 | Source & governance pack | frozen ATT&CK version/hash; event-scenario manifest; licences; safe-use boundary | docs/02-data-governance/ + data/SOURCE_REGISTER.md |
+| D3 | Event normalisation pipeline | schemas; timezone rules; evidence IDs; validation/quarantine; rerun instructions | src/ + docs/03-data-model/ |
+| D4 | Deterministic correlation baseline | chronology logic; entity links; ambiguity rules; baseline outputs; test fixtures | docs/04-baseline/ + tests/ |
+| D5 | ATT&CK mapping contract | technique dictionary; evidence-to-technique rules; unsupported mapping policy; version pin | docs/05-attack-mapping/ |
+| D6 | Local AI investigation layer | pinned model/runtime; prompt/schema; bounded context; raw outputs; failure fallback | prompts/ + docs/06-ai/ |
+| D7 | Claim/guardrail layer | citation validation; compromise/exfiltration claim guard; stale/invalid mapping tests | tests/ + docs/07-guardrails/ |
+| D8 | Analyst review product | timeline; evidence drill-down; accept/reject/edit; unknowns; handover export; audit history | app/ + outputs/examples/ |
+| D9 | Evaluation & assurance | ≥10 scenarios; locked split; per-case metrics; error analysis; reviewer disagreements | evaluation/ |
+| D10 | UAT & technical handover | ≥10 domain tests; 3 user tasks; defects/retests; setup/run/restore/troubleshooting | docs/08-assurance-uat/ + docs/09-technical-handover/ |
+| D11 | Executive/security briefing & demo | 2-page brief; 8–12 slides; reproducible demo; retain/revise/pilot recommendation | deliverables/ |
+| D12 | Final submission & contribution evidence | final SHA/tag; evidence index; CONTRIBUTIONS.md; individual artefacts/reviews | submission/ + CONTRIBUTIONS.md |
 
-Roles may be combined in a small team, but an independent second reviewer must examine semantic gold and final claims. No person may count their own unreviewed AI output as accepted ground truth.
+## Required demo cases
 
-Domain output: Reconstruct incidents from events and alerts. Preserve observed evidence separately from correlations and hypotheses. Map supported behaviour to frozen MITRE ATT&CK techniques. Produce timeline, correlation evidence, unknowns, recommendations and analyst handover.
+Show: one correctly reconstructed suspicious sequence; one authorised/admin case; one incomplete-telemetry case; one unsupported ATT&CK mapping rejected; one material edit invalidating approval; one final reviewed handover.

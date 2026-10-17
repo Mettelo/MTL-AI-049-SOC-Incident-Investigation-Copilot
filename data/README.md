@@ -1,18 +1,64 @@
-# Data and exact acquisition
+# Data Guidance — MTL-AI-049
 
-Primary resource: Repository-authored synthetic frozen event scenarios plus MITRE Enterprise ATT&CK 17.1 STIX 2.1.
+## Core resources
 
-| Local raw filename | Resource/version | Exact URL |
-|---|---|---|
-| attack.json | MITRE Enterprise ATT&CK 17.1; retain MITRE terms and attribution | https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-17.1.json |
+### R1 — MITRE Enterprise ATT&CK 17.1 STIX 2.1
 
-From the root, run `python scripts/fetch_sources.py`. This downloads into ignored `data/raw/` and creates `data/metadata/download_manifest.json` with URL, byte count, SHA-256 and access time. It reuses existing local files; explicitly remove/replace a file only when you intend to refresh it, then compare hashes and rerun validation. Never silently overwrite the frozen cohort.
+Exact URL:
 
-Prepare using:
-```text
-python app.py prepare --source data/raw/attack.json --output runs/attack.json
-```
+https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-17.1.json
 
-The bundled `data/reference/demo.json` is a small frozen input for offline reproduction. Its provenance is recorded in `data/metadata/baseline_manifest.json`. Never describe synthetic examples as real incidents or demo subsets as benchmark test sets.
+Freeze the downloaded file and record filename, bytes, SHA-256, retrieval UTC, ATT&CK version and licence/terms reference.
 
-Raw archives, complete STIX bundles, audio/video and model weights must not be committed. Commit only small derived fixtures, manifests, gold labels and scripts. Read [source register](SOURCE_REGISTER.md) before redistributing.
+### R2 — Frozen security-event scenario pack
+
+The core Mettelo project uses a version-controlled safe event pack containing simulated authentication, process, network and alert records. It is designed for analysis only and must not include executable malware, credentials or instructions for offensive activity.
+
+Each scenario records:
+
+- scenario ID/version;
+- event files and hashes;
+- event source/schema;
+- timezone convention;
+- expected ordering;
+- supported entity links;
+- supported/unsupported ATT&CK techniques;
+- essential unknowns;
+- reviewer-approved next-step expectations.
+
+## Minimum scenario set
+
+Final evaluation must contain at least 10 scenarios and include:
+
+- suspicious script/process chain;
+- authorised administration;
+- incomplete telemetry;
+- duplicate timestamps;
+- out-of-order records;
+- shared host/user ambiguity;
+- conflicting alerts;
+- benign lookalike;
+- multi-host sequence;
+- insufficient-evidence case.
+
+## Raw handling
+
+Keep complete raw telemetry outside Git if large; commit small safe fixtures intentionally. Preserve manifests/hashes and do not silently modify scenario truth after evaluation begins.
+
+## Analytical grain
+
+Primary grain:
+
+**event → evidence ID → host/user/process/network entities**
+
+Derived grain:
+
+**investigation finding → evidence set → ATT&CK candidate → reviewer state**
+
+## ATT&CK rule
+
+ATT&CK mappings are hypotheses supported by evidence, not proof of compromise. Cross-technique relationships and version changes must not be inferred from model memory when the frozen ATT&CK file is available.
+
+## Optional external validation
+
+Teams may add selected publicly released, pre-recorded security-event datasets only after recording source, licence, version, hash and why they improve evaluation. Live attack generation is not required and is outside core scope.
